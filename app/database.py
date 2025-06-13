@@ -19,6 +19,7 @@ AsyncSessionLocal = sessionmaker(
 # Base class for models
 Base = declarative_base()
 
+
 # Dependency for getting DB session
 async def get_db():
     async with AsyncSessionLocal() as session:

@@ -11,7 +11,9 @@ router = APIRouter()
 
 
 @router.post("/", response_model=schemas.ContactRead)
-async def create_contact(contact: schemas.ContactCreate, db: AsyncSession = Depends(get_db)):
+async def create_contact(
+    contact: schemas.ContactCreate, db: AsyncSession = Depends(get_db)
+):
     """
     Create a new contact.
     """
@@ -27,7 +29,7 @@ async def read_contacts(
     db: AsyncSession = Depends(get_db),
     first_name: Optional[str] = Query(None),
     last_name: Optional[str] = Query(None),
-    email: Optional[str] = Query(None)
+    email: Optional[str] = Query(None),
 ):
     """
     Get all contacts or filter by first name, last name, or email.
@@ -50,7 +52,9 @@ async def read_contact(contact_id: int, db: AsyncSession = Depends(get_db)):
     """
     Get a contact by its ID.
     """
-    result = await db.execute(select(models.Contact).where(models.Contact.id == contact_id))
+    result = await db.execute(
+        select(models.Contact).where(models.Contact.id == contact_id)
+    )
     contact = result.scalar_one_or_none()
     if not contact:
         raise HTTPException(status_code=404, detail="Contact not found")
@@ -58,11 +62,17 @@ async def read_contact(contact_id: int, db: AsyncSession = Depends(get_db)):
 
 
 @router.put("/{contact_id}", response_model=schemas.ContactRead)
-async def update_contact(contact_id: int, updated_data: schemas.ContactUpdate, db: AsyncSession = Depends(get_db)):
+async def update_contact(
+    contact_id: int,
+    updated_data: schemas.ContactUpdate,
+    db: AsyncSession = Depends(get_db),
+):
     """
     Update an existing contact.
     """
-    result = await db.execute(select(models.Contact).where(models.Contact.id == contact_id))
+    result = await db.execute(
+        select(models.Contact).where(models.Contact.id == contact_id)
+    )
     contact = result.scalar_one_or_none()
     if not contact:
         raise HTTPException(status_code=404, detail="Contact not found")
@@ -80,7 +90,9 @@ async def delete_contact(contact_id: int, db: AsyncSession = Depends(get_db)):
     """
     Delete a contact by its ID.
     """
-    result = await db.execute(select(models.Contact).where(models.Contact.id == contact_id))
+    result = await db.execute(
+        select(models.Contact).where(models.Contact.id == contact_id)
+    )
     contact = result.scalar_one_or_none()
     if not contact:
         raise HTTPException(status_code=404, detail="Contact not found")
@@ -102,8 +114,10 @@ async def upcoming_birthdays(db: AsyncSession = Depends(get_db)):
     contacts = result.scalars().all()
 
     upcoming = [
-        c for c in contacts
-        if c.birth_date and today <= c.birth_date.replace(year=today.year) <= in_seven_days
+        c
+        for c in contacts
+        if c.birth_date
+        and today <= c.birth_date.replace(year=today.year) <= in_seven_days
     ]
 
     return upcoming

@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Date
 from app.database import Base
 
+
 class Contact(Base):
     __tablename__ = "contacts"
 

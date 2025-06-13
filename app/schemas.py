@@ -1,6 +1,7 @@
-from pydantic import BaseModel, EmailStr, Field
 from typing import Optional
 from datetime import date
+
+from pydantic import BaseModel, EmailStr, Field  # pylint: disable=E0611
 
 
 class ContactBase(BaseModel):

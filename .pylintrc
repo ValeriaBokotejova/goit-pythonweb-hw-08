@@ -1,0 +1,34 @@
+[MASTER]
+# Add app/ to the import path
+init-hook='import sys; sys.path.append("app")'
+load-plugins=pylint_pydantic
+
+# Files and directories to ignore
+ignore=venv,migrations,__pycache__
+
+[MESSAGES CONTROL]
+# Disable specific Pylint warnings
+disable=
+    C0114,  # missing-module-docstring
+    C0115,  # missing-class-docstring
+    C0116,  # missing-function-docstring
+    R0903,  # too-few-public-methods
+    E0401,  # import-error (for dynamic modules like FastAPI, SQLAlchemy)
+    W0611,  # unused-import
+    W0613,  # unused-argument
+
+[FORMAT]
+# Set max line length (88 = black-compatible)
+max-line-length=88
+
+[TYPECHECK]
+# Allow missing members (e.g. FastAPI magic)
+generated-members=asyncpg.*,starlette.*,sqlalchemy.*
+
+[DESIGN]
+# Reduce min public methods per class (Pydantic often has 0)
+min-public-methods=0
+
+[REPORTS]
+# Disable score output
+reports=no
