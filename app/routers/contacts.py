@@ -47,6 +47,27 @@ async def read_contacts(
     return result.scalars().all()
 
 
+@router.get("/upcoming/birthdays", response_model=List[schemas.ContactRead])
+async def upcoming_birthdays(db: AsyncSession = Depends(get_db)):
+    """
+    Get contacts with birthdays in the next 7 days.
+    """
+    today = datetime.today().date()
+    in_seven_days = today + timedelta(days=7)
+
+    result = await db.execute(select(models.Contact))
+    contacts = result.scalars().all()
+
+    upcoming = [
+        c
+        for c in contacts
+        if c.birth_date
+        and today <= c.birth_date.replace(year=today.year) <= in_seven_days
+    ]
+
+    return upcoming
+
+
 @router.get("/{contact_id}", response_model=schemas.ContactRead)
 async def read_contact(contact_id: int, db: AsyncSession = Depends(get_db)):
     """
@@ -100,24 +121,3 @@ async def delete_contact(contact_id: int, db: AsyncSession = Depends(get_db)):
     await db.delete(contact)
     await db.commit()
     return {"message": "Contact deleted successfully"}
-
-
-@router.get("/upcoming/birthdays", response_model=List[schemas.ContactRead])
-async def upcoming_birthdays(db: AsyncSession = Depends(get_db)):
-    """
-    Get contacts with birthdays in the next 7 days.
-    """
-    today = datetime.today().date()
-    in_seven_days = today + timedelta(days=7)
-
-    result = await db.execute(select(models.Contact))
-    contacts = result.scalars().all()
-
-    upcoming = [
-        c
-        for c in contacts
-        if c.birth_date
-        and today <= c.birth_date.replace(year=today.year) <= in_seven_days
-    ]
-
-    return upcoming
