@@ -35,7 +35,7 @@ Supports full CRUD operations and filtering features.
 
 1. **Clone the repo**
     ```bash
-    git clone https://github.com/YOUR_USERNAME/contacts-api.git
+    git clone https://github.com/ValeriaBokotejova/goit-pythonweb-hw-08.git
     cd contacts-api
     ```
 2. **Create virtual environment**
